@@ -22,6 +22,28 @@ typedef struct {
    Color screen[SCREEN_DIMENSIONS];
 } bpvm_t;
 
+typedef enum {
+   BPVM_K_1 = 1 << 0x1,
+   BPVM_K_2 = 1 << 0x2,
+   BPVM_K_3 = 1 << 0x3,
+   BPVM_K_C = 1 << 0xC,
+
+   BPVM_K_4 = 1 << 0x4,
+   BPVM_K_5 = 1 << 0x5,
+   BPVM_K_6 = 1 << 0x6,
+   BPVM_K_D = 1 << 0xD,
+
+   BPVM_K_7 = 1 << 0x7,
+   BPVM_K_8 = 1 << 0x8,
+   BPVM_K_9 = 1 << 0x9,
+   BPVM_K_E = 1 << 0xE,
+
+   BPVM_K_A = 1 << 0xA,
+   BPVM_K_0 = 1 << 0x0,
+   BPVM_K_B = 1 << 0xB,
+   BPVM_K_F = 1 << 0xF,
+} bpvm_key_t;
+
 void bpvm_init(bpvm_t *bpvm)
 {
    assert(bpvm->memory == NULL);
@@ -51,6 +73,46 @@ int bpvm_load(bpvm_t *bpvm, const char *filename)
    }
 
    return -1;
+}
+
+void bpvm_kbinp(bpvm_t *bpvm, KeyboardKey key)
+{
+   bpvm->memory[0] = 0;
+   bpvm->memory[1] = 0;
+
+#define KBMAPLIST \
+   X(ONE, 1) \
+   X(TWO, 2) \
+   X(THREE, 3) \
+   X(FOUR, C) \
+   X(Q, 4) \
+   X(W, 5) \
+   X(E, 6) \
+   X(R, D) \
+   X(A, 7) \
+   X(S, 8) \
+   X(D, 9) \
+   X(F, E) \
+   X(Z, A) \
+   X(X, 0) \
+   X(C, B) \
+   X(V, F) 
+
+#define X(qwerty_key, bpvm_key) \
+   case KEY_##qwerty_key: { \
+      bpvm->memory[1] |= BPVM_K_##bpvm_key; \
+   } \
+   break;
+
+   switch (key) {
+   KBMAPLIST
+
+   default:
+      assert(false && "UNEXPECTED KEY");
+      break;
+   }
+
+#undef X
 }
 
 void bpvm_frame(bpvm_t *bpvm)
@@ -109,6 +171,33 @@ int main(void)
       bpvm_render(&bpvm);
 
       UpdateTexture(txtr, bpvm.screen);
+
+#define HANDLE_VALID_KEYS \
+   X(ONE) \
+   X(TWO) \
+   X(THREE) \
+   X(FOUR) \
+   X(Q) \
+   X(W) \
+   X(E) \
+   X(R) \
+   X(A) \
+   X(S) \
+   X(D) \
+   X(F) \
+   X(Z) \
+   X(X) \
+   X(C) \
+   X(V) 
+
+#define X(key) \
+   if (IsKeyDown(KEY_##key)) { \
+      bpvm_kbinp(&bpvm, KEY_##key); \
+   }
+
+      HANDLE_VALID_KEYS
+
+#undef X
 
       BeginDrawing();
       ClearBackground(BLACK);
