@@ -57,17 +57,25 @@ void bpvm_frame(bpvm_t *bpvm)
 {
    assert(bpvm->memory != NULL);
    printf("[INFO] BPVM_FRAME!\n");
+   u8 *pc = bpvm->memory + (bpvm->memory[2] << 16 | bpvm->memory[3] << 8 | bpvm->memory[4]);
+
+   u32 i = 65536;
+   do {
+      bpvm->memory[pc[3] << 16 | pc[4] << 8 | pc[5]]
+          = bpvm->memory[pc[0] << 16 | pc[1] << 8 | pc[2]];
+      pc = bpvm->memory + (pc[6] << 16 | pc[7] << 8 | pc[8]);
+   } while (--i);
 }
 
 void bpvm_render(bpvm_t *bpvm)
 {
    assert(bpvm->memory != NULL);
-   u8 page = bpvm->memory[5];
+   u8 page  = bpvm->memory[5];
    u32 base = bpvm->memory[5] << 16;
 
    for (u32 i = 0; i < SCREEN_DIMENSIONS; i++) {
-      u8 clridx = bpvm->memory[base + i];
-      Color clr = bpvm->palette[clridx];
+      u8 clridx       = bpvm->memory[base + i];
+      Color clr       = bpvm->palette[clridx];
       bpvm->screen[i] = clr;
    }
 }
@@ -92,7 +100,7 @@ int main(void)
    InitWindow(512, 512, "BPVM");
    SetTargetFPS(60);
 
-   Image img = GenImageColor(256, 256, BLACK);
+   Image img      = GenImageColor(256, 256, BLACK);
    Texture2D txtr = LoadTextureFromImage(img);
 
    printf("[INFO] RAYLIB START LOOP\n");
@@ -105,7 +113,7 @@ int main(void)
       BeginDrawing();
       ClearBackground(BLACK);
 
-      DrawTextureEx(txtr, (Vector2){0, 0}, 0.0f, 2.0f, WHITE);
+      DrawTextureEx(txtr, (Vector2) { 0, 0 }, 0.0f, 2.0f, WHITE);
 
       EndDrawing();
    }
