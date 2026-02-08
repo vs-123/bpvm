@@ -44,7 +44,7 @@ typedef enum {
    BPVM_K_F = 1 << 0xF,
 } bpvm_key_t;
 
-void bpvm_init(bpvm_t *bpvm)
+void bpvm_init(bpvm_t *restrict bpvm)
 {
    assert(bpvm->memory == NULL);
    bpvm->memory = malloc(MEMORY_SIZE * sizeof(u8));
@@ -62,7 +62,7 @@ void bpvm_init(bpvm_t *bpvm)
    }
 }
 
-int bpvm_load(bpvm_t *bpvm, const char *filename)
+int bpvm_load(bpvm_t *restrict bpvm, const char *filename)
 {
    assert(bpvm->memory != NULL);
    FILE *f = fopen(filename, "rb");
@@ -75,7 +75,7 @@ int bpvm_load(bpvm_t *bpvm, const char *filename)
    return -1;
 }
 
-void bpvm_kbinp(bpvm_t *bpvm)
+void bpvm_kbinp(bpvm_t *restrict bpvm)
 {
    bpvm->memory[0] = 0;
    bpvm->memory[1] = 0;
@@ -112,15 +112,16 @@ void bpvm_kbinp(bpvm_t *bpvm)
 #undef X
 }
 
-void bpvm_auoutp(const bpvm_t *bpvm, const AudioStream *austream) {
+void bpvm_auoutp(const bpvm_t *bpvm, const AudioStream *austream)
+{
    assert(bpvm->memory != NULL);
 
    u32 aumembase = (bpvm->memory[6] << 8) | bpvm->memory[7];
-   u8 *samples = &bpvm->memory[aumembase << 8];
+   u8 *samples   = &bpvm->memory[aumembase << 8];
    UpdateAudioStream(*austream, samples, 256);
 }
 
-void bpvm_frame(bpvm_t * restrict bpvm)
+void bpvm_frame(bpvm_t *restrict bpvm)
 {
    assert(bpvm->memory != NULL);
    printf("[INFO] BPVM_FRAME!\n");
@@ -134,7 +135,7 @@ void bpvm_frame(bpvm_t * restrict bpvm)
    } while (--i);
 }
 
-void bpvm_render(bpvm_t *bpvm)
+void bpvm_render(bpvm_t *restrict bpvm)
 {
    assert(bpvm->memory != NULL);
    u8 page  = bpvm->memory[5];
