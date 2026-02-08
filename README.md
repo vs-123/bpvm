@@ -4,12 +4,12 @@ A dead-simple implementation of [BytePusher](https://esolangs.org/wiki/BytePushe
 
 ## SCREENSHOTS
 
-![Colour Palette](https://github.com/vs-123/bpvm/blob/a9710ad99e8c53a5a71d8364e651d78817ffcfd2/screenshots/colour_palette_bpvm_vs123.png)
-![Invert Loop Sine](https://github.com/vs-123/bpvm/blob/a9710ad99e8c53a5a71d8364e651d78817ffcfd2/screenshots/invert_loop_sine_bpvm_vs123.png)
-![Keboard Test](https://github.com/vs-123/bpvm/blob/a9710ad99e8c53a5a71d8364e651d78817ffcfd2/screenshots/kb_test_bpvm_vs123.png)
-![Nyan Cat](https://github.com/vs-123/bpvm/blob/a9710ad99e8c53a5a71d8364e651d78817ffcfd2/screenshots/nyan_cat_bpvm_vs123.png)
-![Scrolling Logo](https://github.com/vs-123/bpvm/blob/a9710ad99e8c53a5a71d8364e651d78817ffcfd2/screenshots/scrolling_logo_bpvm_vs123.png)
-![Sine Scroller](https://github.com/vs-123/bpvm/blob/a9710ad99e8c53a5a71d8364e651d78817ffcfd2/screenshots/sine_scroller_bpvm_vs123.png)
+<img src="https://github.com/vs-123/bpvm/blob/a9710ad99e8c53a5a71d8364e651d78817ffcfd2/screenshots/colour_palette_bpvm_vs123.png" alt="Colour Palette" width="48%"/>
+<img src="https://github.com/vs-123/bpvm/blob/a9710ad99e8c53a5a71d8364e651d78817ffcfd2/screenshots/invert_loop_sine_bpvm_vs123.png" alt="Invert Loop Sine" width="48%"/>
+<img src="https://github.com/vs-123/bpvm/blob/a9710ad99e8c53a5a71d8364e651d78817ffcfd2/screenshots/kb_test_bpvm_vs123.png" alt="Keboard Test" width="48%"/>
+<img src="https://github.com/vs-123/bpvm/blob/a9710ad99e8c53a5a71d8364e651d78817ffcfd2/screenshots/nyan_cat_bpvm_vs123.png" alt="Nyan Cat" width="48%"/>
+<img src="https://github.com/vs-123/bpvm/blob/a9710ad99e8c53a5a71d8364e651d78817ffcfd2/screenshots/scrolling_logo_bpvm_vs123.png" alt="Scrolling Logo" width="48%"/>
+<img src="https://github.com/vs-123/bpvm/blob/a9710ad99e8c53a5a71d8364e651d78817ffcfd2/screenshots/sine_scroller_bpvm_vs123.png" alt="Sine Scroller" width="48%"/>
 
 **[NOTE] The BytePusher programs shown in the screenshots were obtained from https://esolangs.org/wiki/BytePusher#Programs** 
 
