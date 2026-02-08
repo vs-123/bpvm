@@ -112,7 +112,7 @@ void bpvm_kbinp(bpvm_t *bpvm)
 #undef X
 }
 
-void bpvm_auoutp(bpvm_t *bpvm, AudioStream *austream) {
+void bpvm_auoutp(const bpvm_t *bpvm, const AudioStream *austream) {
    assert(bpvm->memory != NULL);
 
    u32 aumembase = (bpvm->memory[6] << 8) | bpvm->memory[7];
@@ -120,11 +120,11 @@ void bpvm_auoutp(bpvm_t *bpvm, AudioStream *austream) {
    UpdateAudioStream(*austream, samples, 256);
 }
 
-void bpvm_frame(bpvm_t *bpvm)
+void bpvm_frame(bpvm_t * restrict bpvm)
 {
    assert(bpvm->memory != NULL);
    printf("[INFO] BPVM_FRAME!\n");
-   u8 *pc = bpvm->memory + (bpvm->memory[2] << 16 | bpvm->memory[3] << 8 | bpvm->memory[4]);
+   volatile u8 *pc = bpvm->memory + (bpvm->memory[2] << 16 | bpvm->memory[3] << 8 | bpvm->memory[4]);
 
    u32 i = 65536;
    do {
