@@ -12,6 +12,39 @@ A dead-simple implementation of [BytePusher](https://esolangs.org/wiki/BytePushe
 - **CLI Arguments & Flag Support** -- Supports case-insensitive command-line argument-parsing for ROM-loading & a few helpful flags including `--help`
 - **<300 SLOC** -- This project was written in less than 300 lines of code including blank newlines
 
+## BUILD INSTRUCTIONS
+
+Prerequisites:
+   - C99 compiler
+   - CMake
+   - A build-system supported by CMake such as GNU Make
+
+Clone this repository and `cd` into it:
+```
+   %  git clone https://github.com/vs-123/bpvm.git
+   %  cd bpvm
+```
+
+Create a `build/` directory and then use `cmake` to build:
+```
+   %  mkdir build/
+   %  cd build/
+   %  cmake ..
+   %  cmake --build .
+```
+
+Run `bpvm`:
+```
+   %  ./bpvm --help
+   [USAGE]
+      *  ./bpvm <FILE>              --  EMULATE <FILE> AS A BYTEPUSHER FILE
+      *  ./bpvm [--INFO | -I]       --  VIEW INFORMATION ABOUT THIS PROGRAM
+      *  ./bpvm [--HELP | -H | -?]  --  PRINT THIS HELP MESSAGE AND EXIT
+   
+   [NOTE] FLAGS ARE CASE-INSENSITIVE
+
+   %  ./bpvm test.bp   #  assuming you've acquired a BytePusher program
+```
 
 ## LICENSE
 
