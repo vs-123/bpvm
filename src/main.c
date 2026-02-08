@@ -124,7 +124,7 @@ void bpvm_frame(bpvm_t * restrict bpvm)
 {
    assert(bpvm->memory != NULL);
    printf("[INFO] BPVM_FRAME!\n");
-   volatile u8 *pc = bpvm->memory + (bpvm->memory[2] << 16 | bpvm->memory[3] << 8 | bpvm->memory[4]);
+   u8 *pc = bpvm->memory + (bpvm->memory[2] << 16 | bpvm->memory[3] << 8 | bpvm->memory[4]);
 
    u32 i = 65536;
    do {
