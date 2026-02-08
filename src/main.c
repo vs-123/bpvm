@@ -188,10 +188,10 @@ int main(void)
    printf("[INFO] RAYLIB START LOOP\n");
    while (!WindowShouldClose()) {
       bpvm_kbinp(&bpvm);
+      bpvm_frame(&bpvm);
       if (IsAudioStreamProcessed(austream)) {
          bpvm_auoutp(&bpvm, &austream);
       }
-      bpvm_frame(&bpvm);
       bpvm_render(&bpvm);
 
       UpdateTexture(txtr, bpvm.screen);
