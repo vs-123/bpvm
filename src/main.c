@@ -2,6 +2,7 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "raylib.h"
 
@@ -60,6 +61,13 @@ void bpvm_init(bpvm_t *restrict bpvm)
    for (u16 i = 216; i < 256; i++) {
       bpvm->palette[i] = BLACK;
    }
+}
+
+void bpvm_free(bpvm_t *restrict bpvm)
+{
+   free(bpvm->memory);
+   memset(bpvm->screen, 0, sizeof(bpvm->screen));
+   memset(bpvm->palette, 0, sizeof(bpvm->palette));
 }
 
 int bpvm_load(bpvm_t *restrict bpvm, const char *filename)
@@ -138,7 +146,6 @@ void bpvm_frame(bpvm_t *restrict bpvm)
 void bpvm_render(bpvm_t *restrict bpvm)
 {
    assert(bpvm->memory != NULL);
-   u8 page  = bpvm->memory[5];
    u32 base = bpvm->memory[5] << 16;
 
    for (u32 i = 0; i < SCREEN_DIMENSIONS; i++) {
@@ -200,6 +207,9 @@ int main(void)
    printf("[INFO] RAYLIB END LOOP\n");
    UnloadImage(img);
    CloseAudioDevice();
+   bpvm_free(&bpvm);
+
+   printf("[INFO] CLOSED & FREED\n");
 
    return 0;
 }
