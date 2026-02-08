@@ -1,4 +1,5 @@
 #include <assert.h>
+#include <ctype.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -155,14 +156,68 @@ void bpvm_render(bpvm_t *restrict bpvm)
    }
 }
 
-int main(void)
+void print_info(void)
 {
+   printf("[INFO]\n");
+   printf("   BPVM -- A DEAD-SIMPLE BYTE-PUSHER VM IMPLEMENTATION IN C.\n");
+   printf("   FOR MORE INFORMATION, VISIT THIS PROJECT'S REPOSITORY PAGE.\n");
+   printf("\n");
+   printf("   *  [AUTHOR]      vs-123 @ https://github.com/vs-123\n");
+   printf("   *  [REPOSITORY]  https://github.com/vs-123/bpvm\n");
+   printf("   *  [LICENSE]     GNU AFFERO GENERAL PUBLIC LICENSE VERSION 3.0 OR LATER\n");
+}
+
+void print_usage(const char *program)
+{
+   printf("[USAGE]\n");
+   printf("   *  %s <FILE>              --  EMULATE <FILE> AS A BYTEPUSHER FILE\n", program);
+   printf("   *  %s [--INFO | -I]       --  VIEW INFORMATION ABOUT THIS PROGRAM\n", program);
+   printf("   *  %s [--HELP | -H | -?]  --  PRINT THIS HELP MESSAGE AND EXIT\n", program);
+   printf("\n");
+   printf("[NOTE] FLAGS ARE CASE-INSENSITIVE\n");
+}
+
+int strcmpci(char const *str1, char const *str2)
+{
+   while (true) {
+      int cmp = tolower(*str1) - tolower(*str2);
+      if (!*str1 || !*str2 || cmp != 0) {
+         return cmp;
+      }
+
+      str1++, str2++;
+   }
+}
+
+int main(int argc, char **argv)
+{
+   if (argc != 2) {
+      fprintf(stderr, "[BPVM ERROR] INCORRECT NUMBER OF ARGUMENTS PROVIDED\n");
+      print_usage(argv[0]);
+      return 1;
+   }
+
+   const char *program_name = argv[0];
+   const char *arg          = argv[1];
+
+   if (strcmpci(arg, "--info") == 0 || strcmpci(arg, "-i") == 0) {
+      print_info();
+      return 0;
+   } else if (strcmpci(arg, "--help") == 0 || strcmpci(arg, "-h") == 0
+       || strcmpci(arg, "-?") == 0) {
+      print_usage(program_name);
+      return 0;
+   } else if (arg[0] == '-') {
+      fprintf(stderr, "[BPVM ERROR] UNKNOWN FLAG. USE --HELP\n");
+      return 1;
+   }
+
    bpvm_t bpvm = { 0 };
    bpvm_init(&bpvm);
-   int ok = bpvm_load(&bpvm, "test.bp");
+   int ok = bpvm_load(&bpvm, arg);
 
    if (ok < 0) {
-      fprintf(stderr, "[ERROR] BP FILE NOT LOADED\n");
+      fprintf(stderr, "[BPVM ERROR] UNABLE TO LOAD FILE\n");
       return 1;
    }
 
@@ -172,7 +227,7 @@ int main(void)
    /*            RAYLIB              */
    /**********************************/
    printf("[INFO] INITIALISING RAYLIB\n");
-   InitWindow(512, 512, "BPVM");
+   InitWindow(512, 512, "BPVM -- vs-123");
    SetTargetFPS(60);
 
    printf("[INFO] RAYLIB SETUP TEXTURE\n");
