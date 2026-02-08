@@ -75,42 +75,39 @@ int bpvm_load(bpvm_t *bpvm, const char *filename)
    return -1;
 }
 
-void bpvm_kbinp(bpvm_t *bpvm, KeyboardKey key)
+void bpvm_kbinp(bpvm_t *bpvm)
 {
    bpvm->memory[0] = 0;
    bpvm->memory[1] = 0;
 
-#define KBMAPLIST \
-   X(ONE, 1) \
-   X(TWO, 2) \
-   X(THREE, 3) \
-   X(FOUR, C) \
-   X(Q, 4) \
-   X(W, 5) \
-   X(E, 6) \
-   X(R, D) \
-   X(A, 7) \
-   X(S, 8) \
-   X(D, 9) \
-   X(F, E) \
-   X(Z, A) \
-   X(X, 0) \
-   X(C, B) \
-   X(V, F) 
+#define KBMAPLIST                                                                                  \
+   X(ONE, 0x1)                                                                                     \
+   X(TWO, 0x2)                                                                                     \
+   X(THREE, 0x3)                                                                                   \
+   X(FOUR, 0xC)                                                                                    \
+   X(Q, 0x4)                                                                                       \
+   X(W, 0x5)                                                                                       \
+   X(E, 0x6)                                                                                       \
+   X(R, 0xD)                                                                                       \
+   X(A, 0x7)                                                                                       \
+   X(S, 0x8)                                                                                       \
+   X(D, 0x9)                                                                                       \
+   X(F, 0xE)                                                                                       \
+   X(Z, 0xA)                                                                                       \
+   X(X, 0x0)                                                                                       \
+   X(C, 0xB)                                                                                       \
+   X(V, 0xF)
 
-#define X(qwerty_key, bpvm_key) \
-   case KEY_##qwerty_key: { \
-      bpvm->memory[1] |= BPVM_K_##bpvm_key; \
-   } \
-   break;
-
-   switch (key) {
-   KBMAPLIST
-
-   default:
-      assert(false && "UNEXPECTED KEY");
-      break;
+#define X(qwerty_key, bpvm_key_bit)                                                                \
+   if (IsKeyDown(KEY_##qwerty_key)) {                                                              \
+      if (bpvm_key_bit <= 7) {                                                                     \
+         bpvm->memory[1] |= (1 << bpvm_key_bit);                                                   \
+      } else {                                                                                     \
+         bpvm->memory[0] |= (1 << (bpvm_key_bit - 8));                                             \
+      }                                                                                            \
    }
+
+   KBMAPLIST
 
 #undef X
 }
@@ -167,37 +164,12 @@ int main(void)
 
    printf("[INFO] RAYLIB START LOOP\n");
    while (!WindowShouldClose()) {
+      bpvm_kbinp(&bpvm);
+
       bpvm_frame(&bpvm);
       bpvm_render(&bpvm);
 
       UpdateTexture(txtr, bpvm.screen);
-
-#define HANDLE_VALID_KEYS \
-   X(ONE) \
-   X(TWO) \
-   X(THREE) \
-   X(FOUR) \
-   X(Q) \
-   X(W) \
-   X(E) \
-   X(R) \
-   X(A) \
-   X(S) \
-   X(D) \
-   X(F) \
-   X(Z) \
-   X(X) \
-   X(C) \
-   X(V) 
-
-#define X(key) \
-   if (IsKeyDown(KEY_##key)) { \
-      bpvm_kbinp(&bpvm, KEY_##key); \
-   }
-
-      HANDLE_VALID_KEYS
-
-#undef X
 
       BeginDrawing();
       ClearBackground(BLACK);
