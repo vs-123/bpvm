@@ -1,6 +1,9 @@
 BasedOnStyle: WebKit
 IndentWidth: 3
-AlignConsecutiveAssignments: Consecutive
-InsertBraces: true
-PointerAlignment: Right
 ColumnLimit: 100
+
+InsertBraces: true
+AlignConsecutiveAssignments: Consecutive
+AllowShortFunctionsOnASingleLine: false
+
+PointerAlignment: Right
