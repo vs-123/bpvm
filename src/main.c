@@ -112,6 +112,14 @@ void bpvm_kbinp(bpvm_t *bpvm)
 #undef X
 }
 
+void bpvm_auoutp(bpvm_t *bpvm, AudioStream *austream) {
+   assert(bpvm->memory != NULL);
+
+   u32 aumembase = (bpvm->memory[6] << 8) | bpvm->memory[7];
+   u8 *samples = &bpvm->memory[aumembase << 8];
+   UpdateAudioStream(*austream, samples, 256);
+}
+
 void bpvm_frame(bpvm_t *bpvm)
 {
    assert(bpvm->memory != NULL);
@@ -159,13 +167,22 @@ int main(void)
    InitWindow(512, 512, "BPVM");
    SetTargetFPS(60);
 
+   printf("[INFO] RAYLIB SETUP TEXTURE\n");
    Image img      = GenImageColor(256, 256, BLACK);
    Texture2D txtr = LoadTextureFromImage(img);
+
+   printf("[INFO] RAYLIB SETUP AUDIO\n");
+   InitAudioDevice();
+   SetAudioStreamBufferSizeDefault(256);
+   AudioStream austream = LoadAudioStream(15360, 8, 1);
+   PlayAudioStream(austream);
 
    printf("[INFO] RAYLIB START LOOP\n");
    while (!WindowShouldClose()) {
       bpvm_kbinp(&bpvm);
-
+      if (IsAudioStreamProcessed(austream)) {
+         bpvm_auoutp(&bpvm, &austream);
+      }
       bpvm_frame(&bpvm);
       bpvm_render(&bpvm);
 
@@ -181,6 +198,7 @@ int main(void)
 
    printf("[INFO] RAYLIB END LOOP\n");
    UnloadImage(img);
+   CloseAudioDevice();
 
    return 0;
 }
